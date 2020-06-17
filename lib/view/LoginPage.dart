@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'Constants.dart';
+import 'package:kater/Constants.dart';
 
 class LoginPage extends StatelessWidget {
   final _idController = TextEditingController();
   final _pwController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final logo = CircleAvatar(
@@ -12,17 +13,17 @@ class LoginPage extends StatelessWidget {
       child: appLogo,
     );
     final title = Text(
-        appTitle,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-            height: 2,
-            fontSize: 35,
-            fontStyle: FontStyle.italic,
-            foreground: Paint()
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 1
-            ..color = Colors.blue[500],
-        ),
+      appTitle,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        height: 2,
+        fontSize: 35,
+        fontStyle: FontStyle.italic,
+        foreground: Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1
+          ..color = Colors.blue[500],
+      ),
     );
     final id = TextFormField(
       controller: _idController,
@@ -35,10 +36,7 @@ class LoginPage extends StatelessWidget {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32.0),
           ),
-          hintStyle: TextStyle(
-              color: Colors.grey
-          )
-      ),
+          hintStyle: TextStyle(color: Colors.grey)),
       style: TextStyle(
         color: Colors.black,
       ),
@@ -54,10 +52,7 @@ class LoginPage extends StatelessWidget {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32.0),
           ),
-          hintStyle: TextStyle(
-              color: Colors.grey
-          )
-      ),
+          hintStyle: TextStyle(color: Colors.grey)),
       style: TextStyle(
         color: Colors.black,
       ),
@@ -104,11 +99,12 @@ class LoginPage extends StatelessWidget {
             SizedBox(height: buttonHeight),
             loginButton,
             Padding(
-              padding:EdgeInsets.symmetric(horizontal:10.0),
-              child:Container(
-                height:1.0,
-                width:130.0,
-                color:horizontalLine,),
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              child: Container(
+                height: 1.0,
+                width: 130.0,
+                color: horizontalLine,
+              ),
             ),
             noLoginButton
           ],

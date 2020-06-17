@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'Constants.dart';
 
 class PostPage extends StatelessWidget {
   @override
@@ -13,7 +12,6 @@ class PostPage extends StatelessWidget {
     );
   }
 }
-
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -38,10 +36,8 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: show
-        ),
+        child:
+            Column(mainAxisAlignment: MainAxisAlignment.center, children: show),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,

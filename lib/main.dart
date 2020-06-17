@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'Constants.dart';
-import 'LoginPage.dart';
-import 'PostPage.dart';
-import 'News.dart';
+import 'package:kater/Constants.dart';
+import 'package:kater/view/LoginPage.dart';
+import 'package:kater/view/News.dart';
+import 'package:kater/view/View.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
     newsPageTag: (context) => NewsPage(),
     postPageTag: (context) => PostPage(),
   };
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,7 +22,6 @@ class MyApp extends StatelessWidget {
           primaryColor: appBackgroundColor,
         ),
         home: LoginPage(),
-        routes: routes
-    );
+        routes: routes);
   }
 }

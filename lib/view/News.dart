@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'Constants.dart';
-import 'models/Post.dart';
-import 'models/PostList.dart';
-import 'models/PostReceiver.dart';
+import 'package:kater/Constants.dart';
+import 'package:kater/compute/PostList.dart';
 
 class NewsPage extends StatefulWidget {
   @override
@@ -15,8 +12,8 @@ class NewsPage extends StatefulWidget {
 class _NewsPageState extends State<NewsPage> {
   int _currentIndex = 0;
 
-  RecordList _records = new RecordList();
-  RecordList _filteredRecords = new RecordList();
+  PostList _post = new PostList();
+  PostList _filteredPosts = new PostList();
 
   String _searchText = "";
 
@@ -26,18 +23,18 @@ class _NewsPageState extends State<NewsPage> {
   void initState() {
     super.initState();
 
-    _records.records = new List();
-    _filteredRecords.records = new List();
+    _post.post = new List();
+    _filteredPosts.post = new List();
 
-    _getRecords();
+    _getPosts();
   }
 
-  void _getRecords() async {
-    RecordList records = await RecordService().loadRecords();
+  void _getPosts() async {
+    PostList post = await PostService().loadPosts();
     setState(() {
-      for (Record record in records.records) {
-        this._records.records.add(record);
-        this._filteredRecords.records.add(record);
+      for (Post record in post.post) {
+        this._post.post.add(record);
+        this._filteredPosts.post.add(record);
       }
     });
   }
@@ -98,7 +95,8 @@ class _NewsPageState extends State<NewsPage> {
         leading: new IconButton(
           icon: new CircleAvatar(
             radius: 32,
-            backgroundImage: NetworkImage("https://kater.me/assets/avatars/pCW0mXYXN0xfit46.png"),
+            backgroundImage: NetworkImage(
+                "https://kater.me/assets/avatars/pCW0mXYXN0xfit46.png"),
           ),
           onPressed: () {},
         ),
@@ -108,18 +106,17 @@ class _NewsPageState extends State<NewsPage> {
             tooltip: 'Search',
             onPressed: () {},
           ),
-        ]
-    );
+        ]);
   }
 
   Widget _buildList(BuildContext context) {
     if (_searchText.isNotEmpty) {
-      _filteredRecords.records = new List();
-      for (int i = 0; i < _records.records.length; i++) {
-        if (_records.records[i].title
+      _filteredPosts.post = new List();
+      for (int i = 0; i < _post.post.length; i++) {
+        if (_post.post[i].title
             .toLowerCase()
             .contains(_searchText.toLowerCase())) {
-          _filteredRecords.records.add(_records.records[i]);
+          _filteredPosts.post.add(_post.post[i]);
         }
       }
     }
@@ -127,14 +124,14 @@ class _NewsPageState extends State<NewsPage> {
     return ListView(
       padding: const EdgeInsets.only(top: 20.0),
       children: this
-          ._filteredRecords
-          .records
+          ._filteredPosts
+          .post
           .map((data) => _buildListItem(context, data))
           .toList(),
     );
   }
 
-  Widget _buildListItem(BuildContext context, Record record) {
+  Widget _buildListItem(BuildContext context, Post record) {
     return Card(
       key: ValueKey(record.title),
       elevation: 8.0,
@@ -142,46 +139,46 @@ class _NewsPageState extends State<NewsPage> {
       child: Container(
         decoration: BoxDecoration(color: appItemColor),
         child: ListTile(
-          contentPadding:
-              EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-          leading: Container(
-              padding: EdgeInsets.only(right: 12.0),
-              decoration: new BoxDecoration(
-                  border: new Border(
-                      right: new BorderSide(width: 1.0, color: Colors.white24)
-                  )),
-              child: Hero(
-                  tag: "avatar_" + record.title,
-                  child: CircleAvatar(
-                    radius: 32,
-                    backgroundImage: NetworkImage(record.avatarUrl),
-                  )
-              )),
-          title: Text(
-            record.title,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          subtitle: Row(
-            children: <Widget>[
-              new Flexible(
-                  child: new Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                    RichText(
-                      text: TextSpan(
-                        text: TEST,
-                        style: TextStyle(color: Colors.white)),
-                      maxLines: 3,
-                      softWrap: true,
-                    )
-                  ]))
-            ],),
-          trailing: Icon(
-              Icons.keyboard_arrow_right,
-              color: Colors.white, size: 30.0),
-          onTap: () {
-            Navigator.of(context).pushNamed(postPageTag);
-          }),
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            leading: Container(
+                padding: EdgeInsets.only(right: 12.0),
+                decoration: new BoxDecoration(
+                    border: new Border(
+                        right:
+                            new BorderSide(width: 1.0, color: Colors.white24))),
+                child: Hero(
+                    tag: "avatar_" + record.title,
+                    child: CircleAvatar(
+                      radius: 32,
+                      backgroundImage: NetworkImage(record.authorAvatarUrl),
+                    ))),
+            title: Text(
+              record.title,
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            subtitle: Row(
+              children: <Widget>[
+                new Flexible(
+                    child: new Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                      RichText(
+                        text: TextSpan(
+                            text: record.authorName,
+                            style: TextStyle(color: Colors.white)),
+                        maxLines: 3,
+                        softWrap: true,
+                      )
+                    ]))
+              ],
+            ),
+            trailing: Icon(Icons.keyboard_arrow_right,
+                color: Colors.white, size: 30.0),
+            onTap: () {
+              Navigator.of(context).pushNamed(postPageTag);
+            }),
       ),
     );
   }
