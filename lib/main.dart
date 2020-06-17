@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/i18n.dart';
 import 'kater_api.dart';
+import 'news.dart';
 
 void main() => runApp(MyApp());
 
@@ -37,10 +38,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String content = "Unknown";
+  List<Widget> show = new List<Widget>();
 
   void _incrementCounter() async {
-    content = await KaterAPI().fetchNews();
+    BottomNavigationWidget();
+    List<Map> data = await KaterAPI().fetchNews();
+    data.forEach((item){
+      show.add(Text(
+        item["attributes"]["title"].toString()
+      ));
+    });
+    build(context);
   }
 
   @override
@@ -52,12 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              content,
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+          children: show
         ),
       ),
       floatingActionButton: FloatingActionButton(

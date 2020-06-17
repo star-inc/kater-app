@@ -1,2 +1,1 @@
-const String kater_host = "https://kater.me";
-const String api_path = "/api";
+const String kater_api = "https://kater.me/api";

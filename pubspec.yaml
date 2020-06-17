@@ -1,5 +1,5 @@
-name: app
-description: Kater App
+name: kater
+description: Official Kater App for Mobile
 version: 1.0.0+1
 
 environment:
@@ -16,7 +16,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
 
 flutter:
   uses-material-design: true
