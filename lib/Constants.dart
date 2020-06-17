@@ -20,7 +20,8 @@ const TEST = "TEST";
 
 // Pages
 const loginPageTag = 'Login Page';
-const homePageTag = 'Home Page';
+const newsPageTag = 'News Page';
+const postPageTag = 'Post Page';
 
 // Images
 Image appLogo = Image.asset('assets/images/logo.png');

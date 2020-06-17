@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
+
 import 'Constants.dart';
 import 'models/Post.dart';
 import 'models/PostList.dart';
 import 'models/PostReceiver.dart';
 
-class HomePage extends StatefulWidget {
+class NewsPage extends StatefulWidget {
   @override
-  _HomePageState createState() {
-    return _HomePageState();
+  _NewsPageState createState() {
+    return _NewsPageState();
   }
 }
 
-class _HomePageState extends State<HomePage> {
-  final TextEditingController _filter = new TextEditingController();
+class _NewsPageState extends State<NewsPage> {
+  int _currentIndex = 0;
 
   RecordList _records = new RecordList();
   RecordList _filteredRecords = new RecordList();
 
   String _searchText = "";
-
-  Icon _searchIcon = new Icon(Icons.search);
 
   Widget _appBarTitle = new Text(appTitle);
 
@@ -50,6 +49,52 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: appBackgroundColor,
       body: _buildList(context),
       resizeToAvoidBottomPadding: false,
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+                color: appButtonColor2,
+              ),
+              title: Text(
+                'HOME',
+                style: TextStyle(color: appButtonColor2),
+              )),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.email,
+                color: appButtonColor2,
+              ),
+              title: Text(
+                'Email',
+                style: TextStyle(color: appButtonColor2),
+              )),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.pages,
+                color: appButtonColor2,
+              ),
+              title: Text(
+                'PAGES',
+                style: TextStyle(color: appButtonColor2),
+              )),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.airplay,
+                color: appButtonColor2,
+              ),
+              title: Text(
+                'AIRPLAY',
+                style: TextStyle(color: appButtonColor2),
+              )),
+        ],
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+      ),
     );
   }
 
@@ -59,14 +104,29 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: appBackgroundColor,
         centerTitle: true,
         title: _appBarTitle,
-        leading: new IconButton(icon: _searchIcon, onPressed: () {},));
+        leading: new IconButton(
+          icon: new CircleAvatar(
+            radius: 32,
+            backgroundImage: NetworkImage("https://avatars1.githubusercontent.com/u/13705584"),
+          ),
+          onPressed: () {},
+        ),
+        actions: [
+          new IconButton(
+            icon: new Icon(Icons.search),
+            tooltip: 'Search',
+            onPressed: () {},
+          ),
+        ]
+    );
   }
 
   Widget _buildList(BuildContext context) {
     if (_searchText.isNotEmpty) {
       _filteredRecords.records = new List();
       for (int i = 0; i < _records.records.length; i++) {
-        if (_records.records[i].title.toLowerCase()
+        if (_records.records[i].title
+            .toLowerCase()
             .contains(_searchText.toLowerCase())) {
           _filteredRecords.records.add(_records.records[i]);
         }
@@ -97,14 +157,17 @@ class _HomePageState extends State<HomePage> {
               padding: EdgeInsets.only(right: 12.0),
               decoration: new BoxDecoration(
                   border: new Border(
-                      right:
-                          new BorderSide(width: 1.0, color: Colors.white24))),
+                      right: new BorderSide(width: 1.0, color: Colors.white24)
+                  )
+              ),
               child: Hero(
                   tag: "avatar_" + record.title,
                   child: CircleAvatar(
                     radius: 32,
                     backgroundImage: NetworkImage(record.avatarUrl),
-                  ))),
+                  )
+              )
+          ),
           title: Text(
             record.title,
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -126,9 +189,13 @@ class _HomePageState extends State<HomePage> {
                   ]))
             ],
           ),
-          trailing:
-              Icon(Icons.keyboard_arrow_right, color: Colors.white, size: 30.0),
-          onTap: () {},
+          trailing: Icon(
+              Icons.keyboard_arrow_right,
+              color: Colors.white, size: 30.0
+          ),
+          onTap: () {
+            Navigator.of(context).pushNamed(postPageTag);
+          },
         ),
       ),
     );

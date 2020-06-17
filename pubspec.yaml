@@ -24,7 +24,6 @@ flutter:
   assets:
     - assets/images/logo.png
 
-
 flutter_launcher_name:
   name: Kater
 
