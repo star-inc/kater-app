@@ -32,58 +32,11 @@ class _NewsPageState extends State<NewsPage> {
   void _getPosts() async {
     PostList post = await PostService().loadPosts();
     setState(() {
-      for (Post record in post.post) {
-        this._post.post.add(record);
-        this._filteredPosts.post.add(record);
+      for (Post post in post.post) {
+        this._post.post.add(post);
+        this._filteredPosts.post.add(post);
       }
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildBar(context),
-      backgroundColor: appBackgroundColor,
-      body: _buildList(context),
-      resizeToAvoidBottomPadding: false,
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.pages,
-                color: appButtonColor2,
-              ),
-              title: Text(
-                'News',
-                style: TextStyle(color: appButtonColor2),
-              )),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.add,
-                color: appButtonColor2,
-              ),
-              title: Text(
-                'New Post',
-                style: TextStyle(color: appButtonColor2),
-              )),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.category,
-                color: appButtonColor2,
-              ),
-              title: Text(
-                'Category',
-                style: TextStyle(color: appButtonColor2),
-              )),
-        ],
-        currentIndex: _currentIndex,
-        onTap: (int index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-      ),
-    );
   }
 
   Widget _buildBar(BuildContext context) {
@@ -131,9 +84,9 @@ class _NewsPageState extends State<NewsPage> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, Post record) {
+  Widget _buildListItem(BuildContext context, Post post) {
     return Card(
-      key: ValueKey(record.title),
+      key: ValueKey(post.title),
       elevation: 8.0,
       margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       child: Container(
@@ -148,13 +101,13 @@ class _NewsPageState extends State<NewsPage> {
                         right:
                             new BorderSide(width: 1.0, color: Colors.white24))),
                 child: Hero(
-                    tag: "avatar_" + record.title,
+                    tag: "avatar_" + post.title,
                     child: CircleAvatar(
                       radius: 32,
-                      backgroundImage: NetworkImage(record.authorAvatarUrl),
+                      backgroundImage: NetworkImage(post.authorAvatarUrl),
                     ))),
             title: Text(
-              record.title,
+              post.title,
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
@@ -166,7 +119,7 @@ class _NewsPageState extends State<NewsPage> {
                         children: <Widget>[
                       RichText(
                         text: TextSpan(
-                            text: record.authorName,
+                            text: post.authorName,
                             style: TextStyle(color: Colors.white)),
                         maxLines: 3,
                         softWrap: true,
@@ -180,9 +133,56 @@ class _NewsPageState extends State<NewsPage> {
               Navigator.of(context).pushNamed(
                 postPageTag,
                 arguments: {
-                  "postId": record.id
+                  "discussionId": post.id
                 });
             }),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: _buildBar(context),
+      backgroundColor: appBackgroundColor,
+      body: _buildList(context),
+      resizeToAvoidBottomPadding: false,
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.pages,
+                color: appButtonColor2,
+              ),
+              title: Text(
+                'News',
+                style: TextStyle(color: appButtonColor2),
+              )),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.add,
+                color: appButtonColor2,
+              ),
+              title: Text(
+                'New Post',
+                style: TextStyle(color: appButtonColor2),
+              )),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.category,
+                color: appButtonColor2,
+              ),
+              title: Text(
+                'Category',
+                style: TextStyle(color: appButtonColor2),
+              )),
+        ],
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
       ),
     );
   }
