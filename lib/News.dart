@@ -53,38 +53,29 @@ class _NewsPageState extends State<NewsPage> {
         items: [
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.home,
-                color: appButtonColor2,
-              ),
-              title: Text(
-                'HOME',
-                style: TextStyle(color: appButtonColor2),
-              )),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.email,
-                color: appButtonColor2,
-              ),
-              title: Text(
-                'Email',
-                style: TextStyle(color: appButtonColor2),
-              )),
-          BottomNavigationBarItem(
-              icon: Icon(
                 Icons.pages,
                 color: appButtonColor2,
               ),
               title: Text(
-                'PAGES',
+                'News',
                 style: TextStyle(color: appButtonColor2),
               )),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.airplay,
+                Icons.add,
                 color: appButtonColor2,
               ),
               title: Text(
-                'AIRPLAY',
+                'New Post',
+                style: TextStyle(color: appButtonColor2),
+              )),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.category,
+                color: appButtonColor2,
+              ),
+              title: Text(
+                'Category',
                 style: TextStyle(color: appButtonColor2),
               )),
         ],
@@ -107,7 +98,7 @@ class _NewsPageState extends State<NewsPage> {
         leading: new IconButton(
           icon: new CircleAvatar(
             radius: 32,
-            backgroundImage: NetworkImage("https://avatars1.githubusercontent.com/u/13705584"),
+            backgroundImage: NetworkImage("https://kater.me/assets/avatars/pCW0mXYXN0xfit46.png"),
           ),
           onPressed: () {},
         ),
@@ -158,16 +149,14 @@ class _NewsPageState extends State<NewsPage> {
               decoration: new BoxDecoration(
                   border: new Border(
                       right: new BorderSide(width: 1.0, color: Colors.white24)
-                  )
-              ),
+                  )),
               child: Hero(
                   tag: "avatar_" + record.title,
                   child: CircleAvatar(
                     radius: 32,
                     backgroundImage: NetworkImage(record.avatarUrl),
                   )
-              )
-          ),
+              )),
           title: Text(
             record.title,
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -181,22 +170,18 @@ class _NewsPageState extends State<NewsPage> {
                     RichText(
                       text: TextSpan(
                         text: TEST,
-                        style: TextStyle(color: Colors.white),
-                      ),
+                        style: TextStyle(color: Colors.white)),
                       maxLines: 3,
                       softWrap: true,
                     )
                   ]))
-            ],
-          ),
+            ],),
           trailing: Icon(
               Icons.keyboard_arrow_right,
-              color: Colors.white, size: 30.0
-          ),
+              color: Colors.white, size: 30.0),
           onTap: () {
             Navigator.of(context).pushNamed(postPageTag);
-          },
-        ),
+          }),
       ),
     );
   }

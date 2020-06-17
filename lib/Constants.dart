@@ -15,7 +15,7 @@ const appTitle = "Kater";
 const idHintText = "Username";
 const pwHintText = "Password";
 const loginButtonText = "Login";
-const noLoginButtonText = "No Login";
+const noLoginButtonText = "Guest Mode";
 const TEST = "TEST";
 
 // Pages
