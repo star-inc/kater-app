@@ -1,24 +1,18 @@
 import 'package:kater/compute/API.dart';
 
 class Post {
-  String id;
   String title;
   String authorName;
-  String authorAvatarUrl;
 
   Post({
-    this.id,
     this.title,
     this.authorName,
-    this.authorAvatarUrl,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return new Post(
-        id: json["id"],
         title: json["id"],
-        authorName: json["id"],
-        authorAvatarUrl:json["id"]);
+        authorName: json["id"]);
   }
 }
 
@@ -27,9 +21,12 @@ class PostList {
 
   PostList({this.post});
 
-  factory PostList.load(List<dynamic> parsedJson) {
+  factory PostList.load(Map<String, dynamic> parsedJson) {
     List<Post> post = new List<Post>();
-    post = parsedJson.map((i) => Post.fromJson(i)).toList();
+    post.add(Post(
+        title: parsedJson["attributes"]["title"],
+        authorName: '${parsedJson["relationships"]["posts"]["data"]}')
+    );
     return new PostList(
       post: post,
     );
@@ -38,9 +35,8 @@ class PostList {
 
 class PostService {
   final apiClient = KaterAPI();
-
-  Future<PostList> loadPosts() async {
-    final jsonResponse = await apiClient.getDiscussionById("75451");
+  Future<PostList> loadPosts(String discussionId) async {
+    final jsonResponse = await apiClient.getDiscussionById(discussionId);
     PostList post = new PostList.load(jsonResponse["data"]);
     return post;
   }

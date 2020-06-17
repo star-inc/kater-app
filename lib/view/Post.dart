@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kater/Constants.dart';
+import 'package:kater/compute/API.dart';
 import 'package:kater/compute/PostRender.dart';
 
 class PostPage extends StatelessWidget {
@@ -33,6 +34,8 @@ class _PostViewPageState extends State<PostViewPage> {
   PostList _post = new PostList();
   PostList _filteredPosts = new PostList();
 
+  List<Widget> show = new List<Widget>();
+
   @override
   void initState() {
     super.initState();
@@ -44,7 +47,7 @@ class _PostViewPageState extends State<PostViewPage> {
   }
 
   void _getPosts() async {
-    PostList post = await PostService().loadPosts();
+    PostList post = await PostService().loadPosts(widget.discussionId);
     setState(() {
       for (Post record in post.post) {
         this._post.post.add(record);
@@ -113,8 +116,6 @@ class _PostViewPageState extends State<PostViewPage> {
     );
   }
 
-  List<Widget> show = new List<Widget>();
-
   void _incrementCounter() async {
     show.add(Text("123"));
     build(context);
@@ -123,7 +124,6 @@ class _PostViewPageState extends State<PostViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: appBackgroundColor,
       appBar: _buildBar(context),
       body: _buildList(context),
       resizeToAvoidBottomPadding: false,
