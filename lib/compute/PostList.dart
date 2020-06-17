@@ -1,20 +1,24 @@
 import 'package:kater/compute/API.dart';
 
 class Post {
+  String id;
   String title;
   String authorName;
   String authorAvatarUrl;
 
   Post({
+    this.id,
     this.title,
     this.authorName,
     this.authorAvatarUrl,
   });
 
   factory Post.fromJson(Map<String, dynamic> json, AuthorList authorList) {
+    final postId = json["id"];
     final postTitle = json["attributes"]["title"];
     final authorId = json["relationships"]["user"]["data"]["id"];
     return new Post(
+        id: postId,
         title: postTitle,
         authorName: authorList.getUsername(authorId),
         authorAvatarUrl: authorList.getAvatarUrl(authorId));

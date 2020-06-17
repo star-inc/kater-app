@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kater/Constants.dart';
 import 'package:kater/view/LoginPage.dart';
 import 'package:kater/view/News.dart';
-import 'package:kater/view/View.dart';
+import 'package:kater/view/Post.dart';
 
 void main() => runApp(MyApp());
 

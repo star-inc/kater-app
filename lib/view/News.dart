@@ -177,7 +177,11 @@ class _NewsPageState extends State<NewsPage> {
             trailing: Icon(Icons.keyboard_arrow_right,
                 color: Colors.white, size: 30.0),
             onTap: () {
-              Navigator.of(context).pushNamed(postPageTag);
+              Navigator.of(context).pushNamed(
+                postPageTag,
+                arguments: {
+                  "postId": record.id
+                });
             }),
       ),
     );
