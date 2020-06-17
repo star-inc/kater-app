@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'helpers/Constants.dart';
+import 'Constants.dart';
 
 class LoginPage extends StatelessWidget {
   final _idController = TextEditingController();
@@ -28,7 +28,7 @@ class LoginPage extends StatelessWidget {
       controller: _idController,
       keyboardType: TextInputType.text,
       maxLines: 1,
-      autofocus: true,
+      autofocus: false,
       decoration: InputDecoration(
           hintText: idHintText,
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -74,6 +74,20 @@ class LoginPage extends StatelessWidget {
         child: Text(loginButtonText, style: TextStyle(color: Colors.white)),
       ),
     );
+    final noLoginButton = Padding(
+      padding: EdgeInsets.symmetric(vertical: 16.0),
+      child: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        onPressed: () {
+          Navigator.of(context).pushNamed(homePageTag);
+        },
+        padding: EdgeInsets.all(12),
+        color: appButtonColor2,
+        child: Text(noLoginButtonText, style: TextStyle(color: Colors.white)),
+      ),
+    );
     return Scaffold(
       backgroundColor: appBackgroundColor,
       body: Center(
@@ -88,7 +102,15 @@ class LoginPage extends StatelessWidget {
             SizedBox(height: buttonHeight),
             password,
             SizedBox(height: buttonHeight),
-            loginButton
+            loginButton,
+            Padding(
+              padding:EdgeInsets.symmetric(horizontal:10.0),
+              child:Container(
+                height:1.0,
+                width:130.0,
+                color:horizontalLine,),
+            ),
+            noLoginButton
           ],
         ),
       ),
