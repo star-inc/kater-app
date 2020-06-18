@@ -73,7 +73,7 @@ class PostService {
 
   Future<PostList> loadPosts() async {
     final jsonResponse = await apiClient.getNews();
-    AuthorList authorList = new AuthorList.load(jsonResponse["included"]);
+    final AuthorList authorList = new AuthorList.load(jsonResponse["included"]);
     PostList post = new PostList.load(jsonResponse["data"], authorList);
     return post;
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kater/Constants.dart';
-import 'package:kater/compute/API.dart';
 import 'package:kater/compute/PostRender.dart';
 
 class PostPage extends StatelessWidget {
@@ -82,7 +81,7 @@ class _PostViewPageState extends State<PostViewPage> {
 
   Widget _buildListItem(BuildContext context, Post record) {
     return Card(
-      key: ValueKey(record.title),
+      key: ValueKey(record.content),
       elevation: 8.0,
       margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       child: Container(
@@ -91,9 +90,8 @@ class _PostViewPageState extends State<PostViewPage> {
             contentPadding:
             EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             title: Text(
-              record.title,
-              style:
-              TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              record.content,
+              style:TextStyle(color: Colors.black),
             ),
             subtitle: Row(
               children: <Widget>[
@@ -103,7 +101,7 @@ class _PostViewPageState extends State<PostViewPage> {
                         children: <Widget>[
                           RichText(
                             text: TextSpan(
-                                text: record.authorName,
+                                text: 'Author: ${record.authorName}',
                                 style: TextStyle(color: Colors.black)),
                             maxLines: 3,
                             softWrap: true,

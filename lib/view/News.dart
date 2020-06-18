@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kater/Constants.dart';
 import 'package:kater/compute/PostList.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class NewsPage extends StatefulWidget {
   @override
@@ -19,14 +20,28 @@ class _NewsPageState extends State<NewsPage> {
 
   Widget _appBarTitle = new Text(appTitle);
 
+
+  RefreshController _refreshController = new RefreshController(
+      initialRefresh: true);
+
+  void _onRefresh() async{
+    await Future.delayed(Duration(milliseconds: 1000));
+    _post.post.clear();
+    _filteredPosts.post.clear();
+    _getPosts();
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async{
+    await Future.delayed(Duration(milliseconds: 1000));
+    _refreshController.loadNoData();
+  }
+
   @override
   void initState() {
     super.initState();
-
     _post.post = new List();
     _filteredPosts.post = new List();
-
-    _getPosts();
   }
 
   void _getPosts() async {
@@ -145,7 +160,39 @@ class _NewsPageState extends State<NewsPage> {
     return Scaffold(
       appBar: _buildBar(context),
       backgroundColor: appBackgroundColor,
-      body: _buildList(context),
+      body: SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: WaterDropHeader(),
+        footer: CustomFooter(
+          builder: (BuildContext context,LoadStatus mode){
+            Widget body ;
+            if(mode==LoadStatus.idle){
+              body =  Text("pull up load");
+            }
+            else if(mode==LoadStatus.loading){
+              body =  Text("Loading");
+            }
+            else if(mode == LoadStatus.failed){
+              body = Text("Load Failed!Click retry!");
+            }
+            else if(mode == LoadStatus.canLoading){
+              body = Text("release to load more");
+            }
+            else{
+              body = Text("No more Data");
+            }
+            return Container(
+              height: 55.0,
+              child: Center(child:body),
+            );
+          },
+        ),
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
+        child: _buildList(context),
+      ),
       resizeToAvoidBottomPadding: false,
       bottomNavigationBar: BottomNavigationBar(
         items: [
