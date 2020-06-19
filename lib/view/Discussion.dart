@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:kater/Constants.dart';
+import 'package:kater/compute/API.dart';
 import 'package:kater/compute/PostRender.dart';
 
 class PostPage extends StatefulWidget {
@@ -15,10 +16,10 @@ class _PostPageState extends State<PostPage> {
 
   final String title = appTitle;
 
+  String subject = "";
   String discussionId = "";
 
   PostList _post = new PostList();
-  PostList _filteredPosts = new PostList();
 
   List<Widget> show = new List<Widget>();
 
@@ -27,6 +28,7 @@ class _PostPageState extends State<PostPage> {
 
   void _onRefresh() async {
     await Future.delayed(Duration(milliseconds: 1000));
+    _post.post.clear();
     _getPosts();
     _refreshController.refreshCompleted();
   }
@@ -40,7 +42,6 @@ class _PostPageState extends State<PostPage> {
   void initState() {
     super.initState();
     _post.post = new List();
-    _filteredPosts.post = new List();
   }
 
   void _getPosts() async {
@@ -48,7 +49,6 @@ class _PostPageState extends State<PostPage> {
     setState(() {
       for (Post record in post.post) {
         this._post.post.add(record);
-        this._filteredPosts.post.add(record);
       }
     });
   }
@@ -60,15 +60,23 @@ class _PostPageState extends State<PostPage> {
   }
 
   Widget _buildList(BuildContext context) {
+    final apiClient = KaterAPI();
     final Map<String, String> args = ModalRoute.of(context).settings.arguments;
-    discussionId = args["discussionId"];
+    this.discussionId = args["discussionId"];
+    apiClient.getDiscussionById(this.discussionId).then((data) {
+      this.subject = '${data["data"]["attributes"]["title"]}';});
+    List<Widget> widgetList = this._post.post.map(
+            (data) => _buildListItem(context, data)).toList();
+    widgetList.insert(0, Padding(
+      padding: const EdgeInsets.only(left: 18.0, bottom: 13.5),
+      child: new Text(this.subject, style: TextStyle(
+          fontWeight: FontWeight.normal,
+          fontStyle: FontStyle.italic,
+          fontSize: 20))
+    ));
     return ListView(
       padding: const EdgeInsets.only(top: 20.0),
-      children: this
-          ._filteredPosts
-          .post
-          .map((data) => _buildListItem(context, data))
-          .toList(),
+      children: widgetList,
     );
   }
 
@@ -92,6 +100,7 @@ class _PostPageState extends State<PostPage> {
                     child: new Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
+                          SizedBox(height: 10),
                           RichText(
                             text: TextSpan(
                                 text: 'Author: ${record.authorName}',
