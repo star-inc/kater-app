@@ -11,7 +11,7 @@ class LoginPage extends StatelessWidget {
     final logo = CircleAvatar(
       backgroundColor: Colors.transparent,
       radius: bigRadius,
-      child: appLogo,
+      child: Image(image: appLogo,),
     );
     final title = Text(
       appTitle,

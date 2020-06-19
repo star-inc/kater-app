@@ -28,35 +28,34 @@ void aboutWidget(BuildContext context) {
       new SizedBox(
         height: 25.0,
       ),
-      new Text('This is the mobile client for Kater($websiteURL).'),
+      new Text('This is the official mobile client for'),
+      new RaisedButton(
+        onPressed: _launchWebsiteURL,
+        child: Text('Kater ($websiteURL).', style: TextStyle(color: Colors.blue),),
+        color: Colors.white,
+        elevation: 0,
+      ),
+      new Text('Designed by Star Inc.'),
+      Padding(
+        padding: const EdgeInsets.only(top: 25.0, bottom: 25.0),
+        child: Container(
+          height: 1.0,
+          width: 130.0,
+          color: horizontalLine,
+        ),
+      ),
+      new Text('This is an opensource software.'),
       new SizedBox(
         height: 10.0,
       ),
-      new Text('Apache'),
-      new SizedBox(
-        height: 10.0,
+      new Text('The application is licenced under'),
+      new RaisedButton(
+        onPressed: _launchGitHubURL,
+        child: Text('Apache LICENSE v. 2.0.', style: TextStyle(color: Colors.blue)),
+        color: Colors.white,
+        elevation: 0,
       ),
-      new Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 25.0),
-            child: new RaisedButton(
-              onPressed: _launchWebsiteURL,
-              child: Text("Kater"),
-              color: Colors.white,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 25.0),
-            child: new RaisedButton(
-              onPressed: _launchGitHubURL,
-              child: Text("GitHub"),
-              color: Colors.white,
-            ),
-          ),
-        ],
-      )
+      new Text('You may obtain the source from GitHub repository.'),
     ],
   );
 }

@@ -25,9 +25,9 @@ const bigRadius = 66.0;
 const buttonHeight = 24.0;
 
 // Images
-final Image appLogo = Image.asset('res/images/logo.png');
+final ImageProvider appLogo = AssetImage('res/images/logo.png');
+final ImageProvider defaultAvatar = AssetImage('res/images/avatar.png');
 final Image miniLogo = Image.asset('res/images/logo.png', height: 100, width: 100);
-final Image defaultAvatar = Image.asset('res/images/avatar.png');
 
 // Colors
 final Color appBackgroundColor = Color.fromRGBO(255, 255, 255, 1.0);

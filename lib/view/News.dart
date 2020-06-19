@@ -141,7 +141,7 @@ class _NewsPageState extends State<NewsPage> {
         leading: new IconButton(
           icon: new CircleAvatar(
             radius: 32,
-            child: defaultAvatar,
+            backgroundImage: defaultAvatar,
           ),
           onPressed: () => _avatarMenu(context),
         ),
@@ -196,7 +196,7 @@ class _NewsPageState extends State<NewsPage> {
                     tag: "avatar_" + post.title,
                     child: CircleAvatar(
                       radius: 32,
-                      backgroundImage: NetworkImage(post.authorAvatarUrl),
+                      backgroundImage: post.authorAvatarUrl != null ? NetworkImage(post.authorAvatarUrl) : defaultAvatar,
                     ))),
             title: Text(
               post.title,
