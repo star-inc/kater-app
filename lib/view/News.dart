@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kater/Constants.dart';
-import 'package:kater/compute/PostList.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import 'package:kater/Constants.dart';
+import 'package:kater/view/AboutWidget.dart';
+import 'package:kater/compute/PostList.dart';
 
 class NewsPage extends StatefulWidget {
   @override
@@ -13,6 +15,7 @@ class NewsPage extends StatefulWidget {
 class _NewsPageState extends State<NewsPage> {
   int _currentIndex = 0;
 
+  int _offset;
   PostList _post = new PostList();
   PostList _filteredPosts = new PostList();
 
@@ -20,21 +23,23 @@ class _NewsPageState extends State<NewsPage> {
 
   Widget _appBarTitle = new Text(appTitle);
 
+  RefreshController _refreshController =
+      new RefreshController(initialRefresh: true);
 
-  RefreshController _refreshController = new RefreshController(
-      initialRefresh: true);
-
-  void _onRefresh() async{
+  void _onRefresh() async {
     await Future.delayed(Duration(milliseconds: 1000));
+    _offset = 0;
     _post.post.clear();
     _filteredPosts.post.clear();
-    _getPosts();
+    _getPosts(_offset);
     _refreshController.refreshCompleted();
   }
 
-  void _onLoading() async{
+  void _onLoading() async {
     await Future.delayed(Duration(milliseconds: 1000));
-    _refreshController.loadNoData();
+    _offset += 20;
+    _getPosts(_offset);
+    _refreshController.loadComplete();
   }
 
   @override
@@ -44,14 +49,88 @@ class _NewsPageState extends State<NewsPage> {
     _filteredPosts.post = new List();
   }
 
-  void _getPosts() async {
-    PostList post = await PostService().loadPosts();
+  void _getPosts(int offset) async {
+    PostList post = await PostService().loadPosts(offset);
     setState(() {
       for (Post post in post.post) {
         this._post.post.add(post);
         this._filteredPosts.post.add(post);
       }
     });
+  }
+
+  void _avatarMenu(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return AlertDialog(
+          title: new Text('Kater User'),
+          content: Container(
+            height: 150.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                new SizedBox(
+                  height: 5.0,
+                ),
+                new InkWell(
+                  child: new Container(
+                    height: 45,
+                    child: new Row(
+                      children: <Widget>[
+                        new Icon(Icons.toys),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 18.0),
+                          child: new Text('Profile'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () {},
+                ),
+                new SizedBox(
+                  height: 5.0,
+                ),
+                new InkWell(
+                  child: new Container(
+                    height: 45,
+                    child: new Row(
+                      children: <Widget>[
+                        new Icon(Icons.exit_to_app),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 18.0),
+                          child: new Text('Logout'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () {},
+                ),
+                new SizedBox(
+                  height: 5.0,
+                ),
+                new InkWell(
+                  child: new Container(
+                    height: 45,
+                    child: new Row(
+                      children: <Widget>[
+                        new Icon(Icons.info),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 18.0),
+                          child: new Text('About'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () => aboutWidget(context),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Widget _buildBar(BuildContext context) {
@@ -63,10 +142,9 @@ class _NewsPageState extends State<NewsPage> {
         leading: new IconButton(
           icon: new CircleAvatar(
             radius: 32,
-            backgroundImage: NetworkImage(
-                "https://kater.me/assets/avatars/pCW0mXYXN0xfit46.png"),
+            child: defaultAvatar,
           ),
-          onPressed: () {},
+          onPressed: () => _avatarMenu(context),
         ),
         actions: [
           new IconButton(
@@ -145,11 +223,8 @@ class _NewsPageState extends State<NewsPage> {
             trailing: Icon(Icons.keyboard_arrow_right,
                 color: Colors.white, size: 30.0),
             onTap: () {
-              Navigator.of(context).pushNamed(
-                postPageTag,
-                arguments: {
-                  "discussionId": post.id
-                });
+              Navigator.of(context)
+                  .pushNamed(postPageTag, arguments: {"discussionId": post.id});
             }),
       ),
     );
@@ -165,26 +240,22 @@ class _NewsPageState extends State<NewsPage> {
         enablePullUp: true,
         header: WaterDropHeader(),
         footer: CustomFooter(
-          builder: (BuildContext context,LoadStatus mode){
-            Widget body ;
-            if(mode==LoadStatus.idle){
-              body =  Text("pull up load");
-            }
-            else if(mode==LoadStatus.loading){
-              body =  Text("Loading");
-            }
-            else if(mode == LoadStatus.failed){
+          builder: (BuildContext context, LoadStatus mode) {
+            Widget body;
+            if (mode == LoadStatus.idle) {
+              body = Text("pull up load");
+            } else if (mode == LoadStatus.loading) {
+              body = Text("Loading");
+            } else if (mode == LoadStatus.failed) {
               body = Text("Load Failed!Click retry!");
-            }
-            else if(mode == LoadStatus.canLoading){
+            } else if (mode == LoadStatus.canLoading) {
               body = Text("release to load more");
-            }
-            else{
+            } else {
               body = Text("No more Data");
             }
             return Container(
               height: 55.0,
-              child: Center(child:body),
+              child: Center(child: body),
             );
           },
         ),

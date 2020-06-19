@@ -15,6 +15,7 @@ dependencies:
 
 dev_dependencies:
   html: ^0.14.0+3
+  url_launcher: ^5.4.11
   pull_to_refresh: ^1.5.7
   flutter_launcher_name: ^0.0.1
   flutter_launcher_icons: ^0.7.3
@@ -24,12 +25,13 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/logo.png
+    - res/images/logo.png
+    - res/images/avatar.png
 
 flutter_launcher_name:
   name: Kater
 
 flutter_icons:
-  image_path: assets/images/logo.png
+  image_path: res/images/logo.png
   android: true
   ios: true

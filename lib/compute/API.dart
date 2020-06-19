@@ -14,6 +14,11 @@ class KaterAPI {
     return json.decode(response.body);
   }
 
+  getNewsWithOffset(int number) async {
+    final response = await http.get("$apiHost/discussions?page[offset]=$number");
+    return json.decode(response.body);
+  }
+
   getDiscussionById(String discussionId) async {
     final response = await http.get("$apiHost/discussions/$discussionId");
     return json.decode(response.body);
