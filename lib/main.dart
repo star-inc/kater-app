@@ -4,6 +4,7 @@ import 'package:kater/Constants.dart';
 import 'package:kater/view/LoginPage.dart';
 import 'package:kater/view/News.dart';
 import 'package:kater/view/Discussion.dart';
+import 'package:kater/view/NewPost.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,6 +13,7 @@ class MyApp extends StatelessWidget {
     loginPageTag: (context) => LoginPage(),
     newsPageTag: (context) => NewsPage(),
     postPageTag: (context) => PostPage(),
+    newPostPageTag: (context) => NewPostPage(),
   };
 
   @override

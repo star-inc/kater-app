@@ -59,14 +59,7 @@ class _PostViewPageState extends State<PostViewPage> {
   Widget _buildBar(BuildContext context) {
     return new AppBar(
       title: Text(widget.title),
-      leading: new IconButton(
-        icon: new Icon(Icons.arrow_back),
-        tooltip: 'Back',
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      ),
-    );
+      leading: new BackButton());
   }
 
   Widget _buildList(BuildContext context) {

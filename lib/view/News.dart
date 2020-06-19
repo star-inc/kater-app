@@ -14,8 +14,10 @@ class NewsPage extends StatefulWidget {
 
 class _NewsPageState extends State<NewsPage> {
 
+  int _currentIndex = 0;
+
   int _offset;
-  PostList _post = new PostList();
+  PostList _item = new PostList();
   PostList _filteredPosts = new PostList();
 
   String _searchText = "";
@@ -25,26 +27,49 @@ class _NewsPageState extends State<NewsPage> {
   RefreshController _refreshController =
       new RefreshController(initialRefresh: true);
 
+  void showNews(){
+    _currentIndex = 0;
+    _offset = 0;
+    _item.post.clear();
+    _filteredPosts.post.clear();
+    _getPosts(_offset);
+  }
+
+  void showCategory(){
+    _currentIndex = 1;
+    _item.post.clear();
+    _filteredPosts.post.clear();
+    _getCategory();
+  }
+
   void _onRefresh() async {
     await Future.delayed(Duration(milliseconds: 1000));
     _offset = 0;
-    _post.post.clear();
+    _item.post.clear();
     _filteredPosts.post.clear();
-    _getPosts(_offset);
+    if(_currentIndex == 0) {
+      _getPosts(_offset);
+    }else if(_currentIndex == 1){
+      _getCategory();
+    }
     _refreshController.refreshCompleted();
   }
 
   void _onLoading() async {
     await Future.delayed(Duration(milliseconds: 1000));
     _offset += 20;
-    _getPosts(_offset);
+    if(_currentIndex == 0) {
+      _getPosts(_offset);
+    }else if(_currentIndex == 1){
+      _getCategory();
+    }
     _refreshController.loadComplete();
   }
 
   @override
   void initState() {
     super.initState();
-    _post.post = new List();
+    _item.post = new List();
     _filteredPosts.post = new List();
   }
 
@@ -52,7 +77,17 @@ class _NewsPageState extends State<NewsPage> {
     PostList post = await PostService().loadPosts(offset);
     setState(() {
       for (Post post in post.post) {
-        this._post.post.add(post);
+        this._item.post.add(post);
+        this._filteredPosts.post.add(post);
+      }
+    });
+  }
+
+  void _getCategory() async {
+    List categories = new List();
+    setState(() {
+      for (Post post in categories) {
+        this._item.post.add(post);
         this._filteredPosts.post.add(post);
       }
     });
@@ -104,7 +139,7 @@ class _NewsPageState extends State<NewsPage> {
                       ],
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () => Navigator.of(context).pushNamed(loginPageTag),
                 ),
                 new SizedBox(
                   height: 5.0,
@@ -157,11 +192,11 @@ class _NewsPageState extends State<NewsPage> {
   Widget _buildList(BuildContext context) {
     if (_searchText.isNotEmpty) {
       _filteredPosts.post = new List();
-      for (int i = 0; i < _post.post.length; i++) {
-        if (_post.post[i].title
+      for (int i = 0; i < _item.post.length; i++) {
+        if (_item.post[i].title
             .toLowerCase()
             .contains(_searchText.toLowerCase())) {
-          _filteredPosts.post.add(_post.post[i]);
+          _filteredPosts.post.add(_item.post[i]);
         }
       }
     }
@@ -241,16 +276,21 @@ class _NewsPageState extends State<NewsPage> {
         footer: CustomFooter(
           builder: (BuildContext context, LoadStatus mode) {
             Widget body;
-            if (mode == LoadStatus.idle) {
-              body = Text("pull up load");
-            } else if (mode == LoadStatus.loading) {
-              body = Text("Loading");
-            } else if (mode == LoadStatus.failed) {
-              body = Text("Load Failed!Click retry!");
-            } else if (mode == LoadStatus.canLoading) {
-              body = Text("release to load more");
-            } else {
-              body = Text("No more Data");
+            switch(mode){
+              case LoadStatus.idle:
+                body = Text("Checking...");
+                break;
+              case LoadStatus.loading:
+                body = Text("Loading...");
+                break;
+              case  LoadStatus.failed:
+                body = Text("Load Failed! Try Again?");
+                break;
+              case LoadStatus.canLoading:
+                body = Text("Release for loading...");
+                break;
+              default:
+                body = Text("No more Data.");
             }
             return Container(
               height: 55.0,
@@ -273,7 +313,7 @@ class _NewsPageState extends State<NewsPage> {
           icon: Icon(
             Icons.add,
           ),
-          onPressed: () {},
+          onPressed: () => Navigator.of(context).pushNamed(newPostPageTag),
         ),
         decoration: BoxDecoration(
             color: appButtonColor,
@@ -287,12 +327,12 @@ class _NewsPageState extends State<NewsPage> {
           children: [
             IconButton(
               icon: Icon(Icons.pages),
-              onPressed: () {},
+              onPressed: showNews,
             ),
             SizedBox(),
             IconButton(
               icon: Icon(Icons.category),
-              onPressed: () {},
+              onPressed: showCategory,
             ),
           ],
           mainAxisAlignment: MainAxisAlignment.spaceAround,

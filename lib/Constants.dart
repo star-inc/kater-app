@@ -19,6 +19,7 @@ const String noLoginButtonText = "Guest Mode";
 const String loginPageTag = 'Login Page';
 const String newsPageTag = 'News Page';
 const String postPageTag = 'Post Page';
+const String newPostPageTag = 'New Post';
 
 // Sizes
 const bigRadius = 66.0;
