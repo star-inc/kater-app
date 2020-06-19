@@ -13,7 +13,6 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
-  int _currentIndex = 0;
 
   int _offset;
   PostList _post = new PostList();
@@ -265,42 +264,39 @@ class _NewsPageState extends State<NewsPage> {
         child: _buildList(context),
       ),
       resizeToAvoidBottomPadding: false,
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.pages,
-                color: appButtonColor2,
-              ),
-              title: Text(
-                'News',
-                style: TextStyle(color: appButtonColor2),
-              )),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.add,
-                color: appButtonColor2,
-              ),
-              title: Text(
-                'New Post',
-                style: TextStyle(color: appButtonColor2),
-              )),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.category,
-                color: appButtonColor2,
-              ),
-              title: Text(
-                'Category',
-                style: TextStyle(color: appButtonColor2),
-              )),
-        ],
-        currentIndex: _currentIndex,
-        onTap: (int index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Container(
+        width: 75,
+        height: 55,
+        child: IconButton(
+          color: Colors.white,
+          icon: Icon(
+            Icons.add,
+          ),
+          onPressed: () {},
+        ),
+        decoration: BoxDecoration(
+            color: appButtonColor,
+            shape: BoxShape.circle
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white,
+        shape: CircularNotchedRectangle(),
+        child: Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.pages),
+              onPressed: () {},
+            ),
+            SizedBox(),
+            IconButton(
+              icon: Icon(Icons.category),
+              onPressed: () {},
+            ),
+          ],
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+        ),
       ),
     );
   }
