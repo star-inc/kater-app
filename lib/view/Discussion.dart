@@ -1,53 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:kater/Constants.dart';
 import 'package:kater/compute/PostRender.dart';
 
-class PostPage extends StatelessWidget {
+class PostPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    final Map<String, String> args = ModalRoute.of(context).settings.arguments;
-    return MaterialApp(
-      title: "Kater",
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: PostViewPage(
-          title: "Kater",
-          discussionId:args["discussionId"]
-      ),
-    );
+  _PostPageState createState() {
+    return _PostPageState();
   }
 }
 
-class PostViewPage extends StatefulWidget {
-  PostViewPage({Key key, this.title, this.discussionId}) : super(key: key);
+class _PostPageState extends State<PostPage> {
 
-  final String title;
-  final String discussionId;
+  final String title = appTitle;
 
-  @override
-  _PostViewPageState createState() => _PostViewPageState();
-}
+  String discussionId = "";
 
-class _PostViewPageState extends State<PostViewPage> {
   PostList _post = new PostList();
   PostList _filteredPosts = new PostList();
 
   List<Widget> show = new List<Widget>();
 
+  RefreshController _refreshController =
+  new RefreshController(initialRefresh: true);
+
+  void _onRefresh() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+    _getPosts();
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+    _refreshController.loadNoData();
+  }
+
   @override
   void initState() {
     super.initState();
-
     _post.post = new List();
     _filteredPosts.post = new List();
-
-    _getPosts();
   }
 
   void _getPosts() async {
-    PostList post = await PostService().loadPosts(widget.discussionId);
+    PostList post = await PostService().loadPosts(this.discussionId);
     setState(() {
       for (Post record in post.post) {
         this._post.post.add(record);
@@ -58,11 +55,13 @@ class _PostViewPageState extends State<PostViewPage> {
 
   Widget _buildBar(BuildContext context) {
     return new AppBar(
-      title: Text(widget.title),
+      title: Text(this.title),
       leading: new BackButton());
   }
 
   Widget _buildList(BuildContext context) {
+    final Map<String, String> args = ModalRoute.of(context).settings.arguments;
+    discussionId = args["discussionId"];
     return ListView(
       padding: const EdgeInsets.only(top: 20.0),
       children: this
@@ -108,19 +107,47 @@ class _PostViewPageState extends State<PostViewPage> {
     );
   }
 
-  void _incrementCounter() async {
-    show.add(Text("123"));
-    build(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body: _buildList(context),
+      body: SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: WaterDropHeader(),
+        footer: CustomFooter(
+          builder: (BuildContext context, LoadStatus mode) {
+            Widget body;
+            switch(mode){
+              case LoadStatus.idle:
+                body = Text("Checking...");
+                break;
+              case LoadStatus.loading:
+                body = Text("Loading...");
+                break;
+              case  LoadStatus.failed:
+                body = Text("Load Failed! Try Again?");
+                break;
+              case LoadStatus.canLoading:
+                body = Text("Release for loading...");
+                break;
+              default:
+                body = Text("No more Data.");
+            }
+            return Container(
+              height: 55.0,
+              child: Center(child: body),
+            );
+          },
+        ),
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
+        child: _buildList(context),
+      ),
       resizeToAvoidBottomPadding: false,
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {},
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
