@@ -5,6 +5,7 @@ const String versionName = "1.0";
 
 // API
 const String apiHost = "https://kater.me/api";
+const String authHost = "https://restapi.starinc.xyz/kater";
 
 // Strings
 const String appTitle = "Kater";
